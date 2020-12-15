@@ -1,4 +1,5 @@
 var assert = require('nanoassert')
+import * as Random from 'expo-random'
 
 var randombytes = (function () {
   var QUOTA = 65536 // limit for QuotaExceededException
