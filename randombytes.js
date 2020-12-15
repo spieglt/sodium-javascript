@@ -10,6 +10,13 @@ var randombytes = (function () {
     }
   }
 
+  function reactNativeBytes (out, n) {
+    let randBytes = Random.getRandomBytes(n)
+    for (let i = 0; i < n; i++) {
+      out[i] = randBytes[i]
+    }
+  }
+
   function nodeBytes (out, n) {
     new Uint8Array(out.buffer, out.byteOffset, n).set(crypto.randomBytes(n))
   }
@@ -20,13 +27,16 @@ var randombytes = (function () {
 
   if (crypto && crypto.getRandomValues) return browserBytes
 
-  if (require != null) {
-    // Node.js. Bust Browserify
-    crypto = require('cry' + 'pto')
-    if (crypto && crypto.randomBytes) return nodeBytes
-  }
+  if (typeof navigator != 'undefined' && navigator.product == 'ReactNative') return reactNativeBytes
 
-  return noImpl
+  // if (require != null) {
+  //   // Node.js. Bust Browserify
+  //   crypto = require('cry' + 'pto')
+  //   if (crypto && crypto.randomBytes) return nodeBytes
+  // }
+
+  return reactNativeBytes
+
 })()
 
 // Make non enumerable as this is an internal function
